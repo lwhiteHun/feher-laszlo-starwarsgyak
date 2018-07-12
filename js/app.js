@@ -130,9 +130,19 @@ function statisticsMaxLengthShip(inputArray) {
   return `${inputArray[shipNumber].image} ${showImg(inputArray[shipNumber].image)}  `;
 }
 
+
 function showImg(imgSource) {
-  return `<div class="img-inline"><img src="/img/${imgSource}" alt=""></div>`;
+  // return `<div class="img-inline"><img src="/img/${imgSource}" alt=""></div>`;
+  var url = '/img/' + imgSource;
+  var fallBackImage = '/img/chewbacca.jpg';
+  testImage(url, function (done) {
+    if (done) {
+      return `<div class="img-inline"><img src="${url}" alt=""></div>`;
+    }
+    return `<div class="img-inline"><img src="${fallBackImage}" alt=""></div>`;
+  });
 }
+
 
 /*
 6. Legyen lehetőség a hajókra rákeresni _model_ szerint. (logaritmikus/binary sort)
@@ -214,9 +224,6 @@ function showObjectProperties(inputObject) {
   for (var k in inputObject) {
     if (inputObject.hasOwnProperty(k)) {
       result += `${k} : ${inputObject[k]}<br> `;
-      // az img mappában nem volt minden kép hivatkozáshoz fizikai fájl
-      // ezért 404 errorok jelentek meg a console-ban, ezért ezt kivettem.
-
       if (k === 'image') {
         result += showImg(inputObject[k]);
       }
@@ -237,7 +244,7 @@ function getData(url, callbackFunc) {
   xhttp.send();
 }
 
-
+var data = [];
 function successAjax(xhttp) {
   // Innen lesz elérhető a JSON file t{artalma, tehát az adatok amikkel dolgoznod kell
   var userDatas = JSON.parse(xhttp.responseText);
@@ -252,11 +259,45 @@ function successAjax(xhttp) {
 
   var search = document.querySelector('#search-button');
   search.addEventListener('click', function () {
-    console.log(document.querySelector('#search-text').value);
     searchForShip(userDatas, document.querySelector('#search-text').value);
   });
   // searchForShip(userDatas, 'star');
+  data = userDatas;
 }
 getData('/json/spaceships.json', successAjax);
+
+// a képet érdemes létrehozni és csak az srsc-t cserélni
+
+var spaceImage = document.createElement('img');
+spaceImage.className = 'space-image';
+document.querySelector('.one-spaceship').appendChild(spaceImage);
+
+
+function testImage(url, callBack) {
+  var img = new Image();
+  img.onload = function () {
+    callBack(true);
+  };
+  img.onerror = function () {
+    callBack(false);
+  };
+  img.src = url;
+}
+function showSpaceShip(model) {
+  // visszaadja az első objektumot, amiben benne van a CR90 szó
+  var ship = data.filter(function (item) {
+    return item.model.indexOf(model) > -1;
+  })[0];
+  console.log(ship);
+  var url = '/img/' + ship.image;
+  var fallBackImage = '/img/chewbacca.jpg';
+  testImage(url, function (done) {
+    if (done) {
+      spaceImage.src = url;
+    } else {
+      spaceImage.src = fallBackImage;
+    }
+  });
+}
 
 
