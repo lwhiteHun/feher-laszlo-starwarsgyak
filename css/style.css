@@ -34,6 +34,7 @@ div{
 .one-spaceship{
   width: 100%;
   background:  #000;
+  position: relative;
 }
 
 .searchbar{
@@ -82,6 +83,7 @@ div{
     position: absolute;
     bottom: 20px;
     left: 20px;
+    z-index: 2;
   }
   
   .spaceship-item{
@@ -92,5 +94,6 @@ div{
   .one-spaceship-result{
     width: 95%;
     background: #ddd;
+    min-height: 1px;
   }
 }

@@ -51,9 +51,23 @@ function setNullToUnknownToAllObjectProperties(inputArray) {
 function showShipProperties(inputArray) {
   var result = '<h3>A szűrt hajók adatai</h3>';
   for (var i = 0; i < inputArray.length; i++) {
-    result += `<div class="spaceship-item">${showObjectProperties(inputArray[i])}</div>`;
+    result += `<div class="spaceship-item" >${showObjectProperties(inputArray[i])}</div>`;
   }
   return resultToTarget('.spaceship-list', result, 'append');
+}
+
+function isOneSpaceShipDivExists() {
+  var checkDiv = document.querySelector('.one-spaceship-result');
+  if (checkDiv === null) {
+    makeResultDiv();
+  }
+}
+
+function makeResultDiv() {
+  var oneSpaceShipDiv = document.querySelector('.one-spaceship');
+  var newDiv = document.createElement('div');
+  newDiv.className = 'one-spaceship-result';
+  oneSpaceShipDiv.appendChild(newDiv);
 }
 
 function resultToTarget(target, value, type) {
@@ -68,6 +82,12 @@ function resultToTarget(target, value, type) {
     document.querySelector(target).innerHTML += value;
   }
 }
+
+function spaceshipItemToOne(spaceShipNumber, inputArray) {
+  isOneSpaceShipDivExists();
+  return resultToTarget('.one-spaceship-result', searchForShipShowFormat(showObjectProperties(inputArray[spaceShipNumber])), 'new');
+}
+
 
 /*
 5. Készítened kell egy statisztikát, mely kiírja a következő statisztikai adatokat:
@@ -132,15 +152,7 @@ function statisticsMaxLengthShip(inputArray) {
 
 
 function showImg(imgSource) {
-  // return `<div class="img-inline"><img src="/img/${imgSource}" alt=""></div>`;
-  var url = '/img/' + imgSource;
-  var fallBackImage = '/img/chewbacca.jpg';
-  testImage(url, function (done) {
-    if (done) {
-      return `<div class="img-inline"><img src="${url}" alt=""></div>`;
-    }
-    return `<div class="img-inline"><img src="${fallBackImage}" alt=""></div>`;
-  });
+  return `<div class="img-inline"><img src="/img/${imgSource}" alt=""></div>`;
 }
 
 
@@ -154,31 +166,17 @@ function showImg(imgSource) {
 * Írasd ki a hajó adatait.
 */
 
+function searchForShipShowFormat(value) {
+  if (value.length > 0) {
+    return `<h3>A keresett hajó:</h3>
+  <p>${value}</p>`;
+  }
+  return '<h3>Nincs találat a keresésre.</h3>';
+}
 
 function searchForShip(inputArray, value) {
   // document.querySelector('.one-spaceship').innerHTML = '';
   var results = [];
-  // console.log(newArray);
-  /*
-  var newArray = descOrderByModel(inputArray.slice());
-  var firstindex = 0;
-  var lastindex = inputArray.length - 1;
-  var middleindex;
-  var found = false;
-
-  while (firstindex <= lastindex && !found) {
-    middleindex = Math.floor((firstindex + lastindex) / 2);
-    if (inputArray[middleindex].model.toUpperCase().indexOf(value.toUpperCase()) > -1) {
-      results.push(newArray[middleindex]);
-      found = true;
-    } else if (newArray[middleindex].model.localeCompare(value) > -1) {
-      lastindex = middleindex - 1;
-    } else  {
-      firstindex = middleindex + 1;
-    }
-  }
-
-*/
 
   for (var i = 0; i < inputArray.length; i++) {
     if (inputArray[i].model.toUpperCase().indexOf(value.toUpperCase()) > -1) {
@@ -186,25 +184,14 @@ function searchForShip(inputArray, value) {
     }
   }
 
-
+  isOneSpaceShipDivExists();
   if (results.length > 1) {
-    return resultToTarget('.one-spaceship',
-      searchForShipShowFormat(showObjectProperties(descOrderByModel(results, 'model')[0])), 'append');
+    return resultToTarget('.one-spaceship-result',
+      searchForShipShowFormat(showObjectProperties(descOrderByModel(results, 'model')[0])), 'new');
   }
-  return resultToTarget('.one-spaceship', searchForShipShowFormat(showObjectProperties(results[0])), 'append');
+  return resultToTarget('.one-spaceship-result', searchForShipShowFormat(showObjectProperties(results[0])), 'new');
 }
 
-function searchForShipShowFormat(value) {
-  if (value.length > 0) {
-    return `<div class="one-spaceship-result">
-  <h3>A keresett hajó:</h3>
-  <p>${value}</p>
-  </div>`;
-  }
-  return `<div class="one-spaceship-result">
-  <h3>Nincs találat a keresésre.</h3>
-  </div>`;
-}
 
 function descOrderByModel(inputArray) {
   var newInputArray = inputArray.slice();
@@ -244,7 +231,7 @@ function getData(url, callbackFunc) {
   xhttp.send();
 }
 
-var data = [];
+
 function successAjax(xhttp) {
   // Innen lesz elérhető a JSON file t{artalma, tehát az adatok amikkel dolgoznod kell
   var userDatas = JSON.parse(xhttp.responseText);
@@ -257,22 +244,30 @@ function successAjax(xhttp) {
 
   showShipProperties(userDatas);
 
+  // makeResultDiv();
+
   var search = document.querySelector('#search-button');
   search.addEventListener('click', function () {
     searchForShip(userDatas, document.querySelector('#search-text').value);
   });
-  // searchForShip(userDatas, 'star');
-  data = userDatas;
+
+  var spaceshipDivs = document.querySelectorAll('.spaceship-item');
+  for (let j = 0; j < spaceshipDivs.length; j++) {
+    var spaceshipDivsNew = spaceshipDivs[j];
+    spaceshipDivsNew.addEventListener('click', function () {
+      spaceshipItemToOne(j, userDatas);
+    });
+  }
 }
 getData('/json/spaceships.json', successAjax);
 
-// a képet érdemes létrehozni és csak az srsc-t cserélni
 
+/*
+var data = [];
+// a képet érdemes létrehozni és csak az srsc-t cserélni
 var spaceImage = document.createElement('img');
 spaceImage.className = 'space-image';
 document.querySelector('.one-spaceship').appendChild(spaceImage);
-
-
 function testImage(url, callBack) {
   var img = new Image();
   img.onload = function () {
@@ -299,5 +294,5 @@ function showSpaceShip(model) {
     }
   });
 }
-
+*/
 
