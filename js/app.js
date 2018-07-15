@@ -23,8 +23,6 @@ function advencedBubbleToOrderByPrice(inputArray) {
 function deleteConsumablesNullValuedObjects(inputArray) {
   for (var i = 0; i < inputArray.length; i++) {
     if (inputArray[i].consumables === null) {
-      // delete inputArray[i];
-      // myArray.splice(start, deleteCount) actually removes the element, reindexes the array, and changes its length.
       inputArray.splice(i, 1);
     }
   }
@@ -46,7 +44,9 @@ function setNullToUnknownToAllObjectProperties(inputArray) {
 }
 
 /*
-4. Írasd ki így kapott hajók adatait.
+4. A shapceship-list class-ű divbe jelenítsd meg az így kapott hajók adatait, beleérve a képét is.
+5. Ha valamelyik hajó adatait tartalmazó html elemre (pl.: a divre amibe benne van minden adata) rákattintunk,
+akkor töltse be az adott hajó adatait a one-spaceship class-ű div-be.
 */
 function showShipProperties(inputArray) {
   var result = '<h3>A szűrt hajók adatai</h3>';
@@ -88,9 +88,8 @@ function spaceshipItemToOne(spaceShipNumber, inputArray) {
   return resultToTarget('.one-spaceship-result', searchForShipShowFormat(showObjectProperties(inputArray[spaceShipNumber])), 'new');
 }
 
-
 /*
-5. Készítened kell egy statisztikát, mely kiírja a következő statisztikai adatokat:
+6. Készítened kell egy statisztikát, mely a shapceship-list class-ű div aljára a következő adatokat fogja beleírni:
 
 * Egy fős (crew = 1) legénységgel rendelkező hajók darabszáma.
 * A legnagyobb cargo_capacity-vel rendelkező hajó neve (model)
@@ -155,15 +154,14 @@ function showImg(imgSource) {
   return `<div class="img-inline"><img src="/img/${imgSource}" alt=""></div>`;
 }
 
-
 /*
-6. Legyen lehetőség a hajókra rákeresni _model_ szerint. (logaritmikus/binary sort)
+7. Legyen lehetőség a hajókra rákeresni _model_ szerint.
 
 * A keresett nevet paraméterként kapja a függvényed.
 * A keresés nem case sensitive
 * Nem csak teljes egyezést vizsgálunk, tehát ha a keresett szöveg szerepel a hajó nevében már az is találat
 * Ha több találatunk is lenne, azt a hajót adjuk vissza, amelyiknek a neve ABC sorrendben a legelső lenne.
-* Írasd ki a hajó adatait.
+* Az adott hajó adatait a one-spaceship class-ű div-be kell megjeleníteni rendezett formában, képpel együtt.
 */
 
 function searchForShipShowFormat(value) {
@@ -175,9 +173,7 @@ function searchForShipShowFormat(value) {
 }
 
 function searchForShip(inputArray, value) {
-  // document.querySelector('.one-spaceship').innerHTML = '';
   var results = [];
-
   for (var i = 0; i < inputArray.length; i++) {
     if (inputArray[i].model.toUpperCase().indexOf(value.toUpperCase()) > -1) {
       results.push(inputArray[i]);
@@ -219,6 +215,9 @@ function showObjectProperties(inputObject) {
   return result;
 }
 
+function deleteSearchInput() {
+  document.querySelector('#search-text').value = '';
+}
 
 function getData(url, callbackFunc) {
   var xhttp = new XMLHttpRequest();
@@ -244,11 +243,10 @@ function successAjax(xhttp) {
 
   showShipProperties(userDatas);
 
-  // makeResultDiv();
-
   var search = document.querySelector('#search-button');
   search.addEventListener('click', function () {
     searchForShip(userDatas, document.querySelector('#search-text').value);
+    deleteSearchInput();
   });
 
   var spaceshipDivs = document.querySelectorAll('.spaceship-item');
@@ -260,39 +258,3 @@ function successAjax(xhttp) {
   }
 }
 getData('/json/spaceships.json', successAjax);
-
-
-/*
-var data = [];
-// a képet érdemes létrehozni és csak az srsc-t cserélni
-var spaceImage = document.createElement('img');
-spaceImage.className = 'space-image';
-document.querySelector('.one-spaceship').appendChild(spaceImage);
-function testImage(url, callBack) {
-  var img = new Image();
-  img.onload = function () {
-    callBack(true);
-  };
-  img.onerror = function () {
-    callBack(false);
-  };
-  img.src = url;
-}
-function showSpaceShip(model) {
-  // visszaadja az első objektumot, amiben benne van a CR90 szó
-  var ship = data.filter(function (item) {
-    return item.model.indexOf(model) > -1;
-  })[0];
-  console.log(ship);
-  var url = '/img/' + ship.image;
-  var fallBackImage = '/img/chewbacca.jpg';
-  testImage(url, function (done) {
-    if (done) {
-      spaceImage.src = url;
-    } else {
-      spaceImage.src = fallBackImage;
-    }
-  });
-}
-*/
-
