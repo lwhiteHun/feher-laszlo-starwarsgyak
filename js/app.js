@@ -100,7 +100,7 @@ function showStatistics(inputArray) {
   var spaceshipListDiv = document.querySelector('.spaceship-list');
   var newDiv = document.createElement('div');
   newDiv.className = 'spaceship-statistics';
-  newDiv.innerHTML = `<hr><h2>Statisztikák</h2>Egy fős (crew = 1) legénységgel rendelkező hajók darabszáma: ${statisticsOneCrew(inputArray)} db<br>
+  newDiv.innerHTML = `<h2>Statisztikák</h2>Egy fős (crew = 1) legénységgel rendelkező hajók darabszáma: ${statisticsOneCrew(inputArray)} db<br>
   A legnagyobb cargo_capacity-vel rendelkező hajó neve (model): ${statisticsMaxCargo(inputArray)}<br>
   Az összes hajó utasainak (passengers) összesített száma: ${statisticsSumPassengers(inputArray)}<br>
   A leghosszabb (lengthiness) hajó képének a neve: ${statisticsMaxLengthShip(inputArray)}`;
