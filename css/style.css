@@ -66,6 +66,10 @@ div{
   background: #ddd;
 }
 
+.spaceship-statistics{
+  background: #ddd;
+}
+
 @media(min-width:1200px){
   .spaceship-list{
     width: 75%;
@@ -95,5 +99,8 @@ div{
     width: 95%;
     background: #ddd;
     min-height: 1px;
+  }
+  .spaceship-statistics{
+    background: #ddd;
   }
 }
