@@ -97,11 +97,15 @@ function spaceshipItemToOne(spaceShipNumber, inputArray) {
 * A leghosszabb(lengthiness) hajó képének a neve
 */
 function showStatistics(inputArray) {
-  var result = `Egy fős (crew = 1) legénységgel rendelkező hajók darabszáma: ${statisticsOneCrew(inputArray)} db<br>
+  var spaceshipListDiv = document.querySelector('.spaceship-list');
+  var newDiv = document.createElement('div');
+  newDiv.className = 'spaceship-statistics';
+  newDiv.innerHTML = `<hr><h2>Statisztikák</h2>Egy fős (crew = 1) legénységgel rendelkező hajók darabszáma: ${statisticsOneCrew(inputArray)} db<br>
   A legnagyobb cargo_capacity-vel rendelkező hajó neve (model): ${statisticsMaxCargo(inputArray)}<br>
   Az összes hajó utasainak (passengers) összesített száma: ${statisticsSumPassengers(inputArray)}<br>
   A leghosszabb (lengthiness) hajó képének a neve: ${statisticsMaxLengthShip(inputArray)}`;
-  resultToTarget('.spaceship-list', result, 'append');
+  // resultToTarget('.spaceship-list', result, 'append');
+  spaceshipListDiv.appendChild(newDiv);
 }
 function statisticsOneCrew(inputArray) {
   var count = 0;
@@ -239,7 +243,6 @@ function successAjax(xhttp) {
   deleteConsumablesNullValuedObjects(userDatas);
   setNullToUnknownToAllObjectProperties(userDatas);
 
-  showStatistics(userDatas);
 
   showShipProperties(userDatas);
 
@@ -256,5 +259,7 @@ function successAjax(xhttp) {
       spaceshipItemToOne(j, userDatas);
     });
   }
+
+  showStatistics(userDatas);
 }
 getData('/json/spaceships.json', successAjax);
