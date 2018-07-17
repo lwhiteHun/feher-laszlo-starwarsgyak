@@ -8,7 +8,7 @@ function advencedBubbleToOrderByPrice(inputArray) {
   while (i > 0) {
     csere = 0;
     for (var j = 0; j < i - 1; j++) {
-      if (stringToInt(inputArray[j].cost_in_credits) > stringToInt(inputArray[j + 1].cost_in_credits)) {
+      if (parseInt(inputArray[j].cost_in_credits, 10) > parseInt(inputArray[j + 1].cost_in_credits, 10)) {
         [inputArray[j], inputArray[j + 1]] = [inputArray[j + 1], inputArray[j]];
         csere = j;
       }
@@ -117,11 +117,11 @@ function statisticsOneCrew(inputArray) {
   return count;
 }
 function statisticsMaxCargo(inputArray) {
-  var max = stringToInt(inputArray[0].cargo_capacity);
+  var max = parseInt(inputArray[0].cargo_capacity, 10);
   var shipNumber = 0;
   for (var i = 0; i < inputArray.length; i++) {
-    if (stringToInt(inputArray[i].cargo_capacity) > max) {
-      max = stringToInt(inputArray[i].cargo_capacity);
+    if (parseInt(inputArray[i].cargo_capacity, 10) > max) {
+      max = parseInt(inputArray[i].cargo_capacity, 10);
       shipNumber = i;
     }
   }
@@ -130,29 +130,24 @@ function statisticsMaxCargo(inputArray) {
 function statisticsSumPassengers(inputArray) {
   var sum = 0;
   for (var i = 0; i < inputArray.length; i++) {
-    if (stringToInt(inputArray[i].passengers)) {
-      sum += stringToInt(inputArray[i].passengers);
+    if (parseInt(inputArray[i].passengers, 10)) {
+      sum += parseInt(inputArray[i].passengers, 10);
     }
   }
   return sum;
 }
 
-function stringToInt(value) {
-  return parseInt(value, 10);
-}
-
 function statisticsMaxLengthShip(inputArray) {
-  var max = stringToInt(inputArray[0].lengthiness);
+  var max = parseInt(inputArray[0].lengthiness, 10);
   var shipNumber = 0;
   for (var i = 0; i < inputArray.length; i++) {
-    if (stringToInt(inputArray[i].lengthiness) > max) {
-      max = stringToInt(inputArray[i].lengthiness);
+    if (parseInt(inputArray[i].lengthiness, 10) > max) {
+      max = parseInt(inputArray[i].lengthiness, 10);
       shipNumber = i;
     }
   }
   return `${inputArray[shipNumber].image} ${showImg(inputArray[shipNumber].image)}  `;
 }
-
 
 function showImg(imgSource) {
   return `<div class="img-inline"><img src="/img/${imgSource}" alt=""></div>`;
